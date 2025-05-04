@@ -143,15 +143,6 @@ Test access using external service IP or LoadBalancer endpoint.
 
 ---
 
-## 💡 Future Work
-
-- Add auto-scaling and monitoring
-- Extend to Oracle/IBM clouds
-- Implement advanced traffic routing (Istio/Linkerd)
-- Secure deployments using RBAC & secrets management
-
----
-
 ## 🙌 Credits
 
 - Developed by Aman K
