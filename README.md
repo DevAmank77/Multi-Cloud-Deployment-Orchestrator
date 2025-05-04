@@ -134,7 +134,7 @@ Test access using external service IP or LoadBalancer endpoint.
 
 ---
 
-## 🔁 CI/CD Automation (Optional)
+## 🔁 CI/CD Automation
 
 - Use `.github/workflows/deploy.yml` to automate:
   - Docker builds
