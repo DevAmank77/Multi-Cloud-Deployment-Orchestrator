@@ -22,7 +22,7 @@ jobs:
     - name: Build and push Docker image
       run: |
         IMAGE_TAG=${{ github.sha }}
-        docker build -t amank772004/flask-multicloud-app:$IMAGE_TAG -t amank772004/flask-multicloud-app:latest ./docker
+        docker build -t amank772004/flask-multicloud-app:$IMAGE_TAG -t amank772004/flask-multicloud-app:latest ./flask-multicloud-app
         docker push amank772004/flask-multicloud-app:$IMAGE_TAG
         docker push amank772004/flask-multicloud-app:latest
 
