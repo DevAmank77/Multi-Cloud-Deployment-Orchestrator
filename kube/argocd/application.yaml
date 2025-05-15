@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/amank772004/multi-cloud-orchestrator
+    repoURL: https://github.com/DevAmank77/Multi-Cloud-Deployment-Orchestrator.git
     targetRevision: HEAD
     path: kubernetes/app
   destination:
@@ -25,7 +25,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/amank772004/multi-cloud-orchestrator
+    repoURL: https://github.com/DevAmank77/Multi-Cloud-Deployment-Orchestrator.git
     targetRevision: HEAD
     path: kubernetes/app
   destination:
