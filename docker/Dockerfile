@@ -1,4 +1,13 @@
-FROM docker/whalesay:latest
-LABEL Name=project Version=0.0.1
-RUN apt-get -y update && apt-get install -y fortunes
-CMD ["sh", "-c", "/usr/games/fortune -a | cowsay"]
+# Dockerfile for your Flask app
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY . /app
+
+RUN pip install -r requirements.txt
+
+EXPOSE 8000
+
+CMD ["python", "app.py"]
