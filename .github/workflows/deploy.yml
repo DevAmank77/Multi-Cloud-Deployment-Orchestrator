@@ -22,20 +22,21 @@ jobs:
     - name: Build and push Docker image
       run: |
         IMAGE_TAG=${{ github.sha }}
-        docker build -t yourdockerhubusername/flask-app:$IMAGE_TAG ./flask-app
-        docker push yourdockerhubusername/flask-app:$IMAGE_TAG
+        docker build -t amank772004/flask-multicloud-app:$IMAGE_TAG -t amank772004/flask-multicloud-app:latest ./flask-app
+        docker push amank772004/flask-multicloud-app:$IMAGE_TAG
+        docker push amank772004/flask-multicloud-app:latest
 
     - name: Update Kubernetes deployment image tag
       run: |
         IMAGE_TAG=${{ github.sha }}
-        sed -i "s|image: yourdockerhubusername/flask-app:.*|image: yourdockerhubusername/flask-app:$IMAGE_TAG|g" ./kube/app/deployment.yaml
+        sed -i "s|image: amank772004/flask-multicloud-app:.*|image: amank772004/flask-multicloud-app:$IMAGE_TAG|g" ./kube/app/deployment.yaml
 
     - name: Commit and push updated manifest
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
         git add ./kube/app/deployment.yaml
-        git commit -m "Update image tag to $IMAGE_TAG"
+        git diff --cached --quiet || git commit -m "Update image tag to $IMAGE_TAG"
         git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
