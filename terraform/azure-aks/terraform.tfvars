@@ -1,6 +1,0 @@
-client_id       = "175a35ca-f8aa-42a6-8ba2-c3cf31c930a2"
-subscription_id = "ce266e7c-50f1-4325-be1e-d44c3c95626b"
-tenant_id       = "b1d1b624-55aa-460a-a8cc-b0e191c537d3"
-location       = "Southeast Asia"
-resource_group = "aman-azure-aks"
-cluster_name   = "aman-aks"

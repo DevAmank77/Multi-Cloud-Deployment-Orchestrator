@@ -18,4 +18,4 @@ spec:
       - name: flask-app
         image: amank772004/flask-multicloud-app:latest
         ports:
-        - containerPort: 5000
+        - containerPort: 8000
