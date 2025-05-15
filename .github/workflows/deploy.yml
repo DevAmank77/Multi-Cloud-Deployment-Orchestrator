@@ -35,8 +35,8 @@ jobs:
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
+        git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/DevAmank77/Multi-Cloud-Deployment-Orchestrator.git
         git add ./kube/app/deployment.yaml
-        git diff --cached --quiet || git commit -m "Update image tag to $IMAGE_TAG"
+        git commit -m "Update image tag to $IMAGE_TAG"
         git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
