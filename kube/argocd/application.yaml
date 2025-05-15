@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/DevAmank77/Multi-Cloud-Deployment-Orchestrator.git
     targetRevision: HEAD
-    path: kubernetes/app
+    path: kube/app
   destination:
     server: https://34.56.64.122
     namespace: default
@@ -27,7 +27,7 @@ spec:
   source:
     repoURL: https://github.com/DevAmank77/Multi-Cloud-Deployment-Orchestrator.git
     targetRevision: HEAD
-    path: kubernetes/app
+    path: kube/app
   destination:
     server: https://myaks-cblxm8ra.hcp.eastus.azmk8s.io:443
     namespace: default
