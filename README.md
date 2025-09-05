@@ -172,6 +172,6 @@ Access the app using the LoadBalancer/Ingress external IP from each cluster.
 
 🙌 Credits
 
-Developed by: Aman Kumar
+Developed by: Aman K
 
 Guidance: Prof. Neetesh (IIT Roorkee)
