@@ -1,7 +1,9 @@
 🌐 Multi-Cloud Deployment Orchestrator with Argo CD
+
 This project demonstrates a complete end-to-end setup to deploy a Dockerized Flask application across AWS, GCP, and Azure using a GitOps workflow powered by Argo CD, with infrastructure provisioned by Terraform.
 
 📌 Table of Contents
+
 Overview
 
 Architecture
@@ -21,26 +23,31 @@ Testing
 Credits
 
 ✅ Overview
-This orchestrator enables the automated deployment and synchronization of a containerized application across Kubernetes clusters on AWS, GCP, and Azure. By leveraging Argo CD, it implements a GitOps methodology where the Git repository serves as the single source of truth, eliminating vendor lock-in and improving application availability.
+
+This orchestrator enables automated deployment and synchronization of a containerized application across Kubernetes clusters on AWS, GCP, and Azure.
+
+By leveraging Argo CD, it implements a GitOps methodology where the Git repository serves as the single source of truth. This ensures consistency, eliminates vendor lock-in, and improves application availability.
 
 🏗️ Architecture
-The architecture is centered around a GitOps model where Argo CD continuously monitors a Git repository for the desired state of the application.
 
-Flask App: A simple web application containerized using Docker.
+The architecture is built around a GitOps model where Argo CD continuously monitors the Git repository for the desired application state:
 
-Kubernetes Clusters: Provisioned on AWS (EKS), GCP (GKE), and Azure (AKS) using Terraform. One cluster (e.g., EKS) hosts the Argo CD instance.
+Flask App → Simple web application containerized using Docker
 
-Argo CD: Pulls Kubernetes manifests from a Git repo and applies them to all registered clusters.
+Kubernetes Clusters → EKS (AWS), GKE (GCP), AKS (Azure), provisioned with Terraform
 
-Git Repository: Contains the application's Kubernetes manifests and serves as the single source of truth.
+Argo CD → Runs on the host cluster (e.g., AWS EKS) and deploys to all clusters
 
-ApplicationSet: An Argo CD resource used to automate application deployments across multiple clusters.
+Git Repository → Stores Kubernetes manifests (source of truth)
 
-Docker Hub: Serves as the container image registry.
+ApplicationSet → Automates multi-cluster deployments from a single config
 
-CI/CD Pipeline: Automates building the Docker image and updating the image tag in the Kubernetes manifests.
+Docker Hub → Container image registry
+
+CI/CD Pipeline → Builds/pushes Docker image and updates manifests
 
 🧰 Technologies Used
+
 Application: Flask, Docker
 
 Cloud & Orchestration: Kubernetes (EKS, GKE, AKS), Argo CD
@@ -79,87 +86,92 @@ project/
 
 ⚙️ Setup Instructions
 1. Clone Repository
-git clone [https://github.com/your-repo/project.git](https://github.com/your-repo/project.git)
+git clone https://github.com/your-repo/project.git
 cd project
 
 2. Build and Push Flask App Image
-This step is typically handled by the CI pipeline but can be done manually for the initial setup.
+
+This is usually handled by the CI pipeline, but can be done manually for the first setup:
 
 cd flask-app
 docker build -t amank772004/flask-app:latest .
 docker push amank772004/flask-app:latest
 
 3. Provision Kubernetes Clusters
-Use the provided Terraform scripts to create your multi-cloud infrastructure.
 
-AWS EKS (Host Cluster):
+Use Terraform scripts to create the infrastructure.
+
+AWS EKS (host cluster):
 
 cd terraform/aws-eks
-terraform init && terraform apply
+terraform init
+terraform apply
 
-GCP GKE & Azure AKS (Member Clusters):
-Follow similar steps in their respective directories. Ensure you have kubectl contexts configured for all three clusters post-provisioning.
+
+GCP GKE & Azure AKS (member clusters):
+
+Run the respective Terraform scripts in their directories. Ensure kubectl contexts are available for all three clusters.
 
 🚀 GitOps Deployment with Argo CD
-1. Install Argo CD on the Host Cluster (EKS)
-# Create the namespace for Argo CD
+1. Install Argo CD on Host Cluster (EKS)
 kubectl --context=<eks-context> create namespace argocd
-
-# Apply the Argo CD installation manifests
-kubectl --context=<eks-context> apply -n argocd -f [https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml](https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml)
+kubectl --context=<eks-context> apply -n argocd \
+  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 2. Access the Argo CD UI
-Expose the Argo CD server via port-forwarding for access.
-
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 
-Access the UI at https://localhost:8080. Retrieve the initial admin password with:
 
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+URL: https://localhost:8080
 
-3. Register Member Clusters with Argo CD
-From your local machine, add the GKE and AKS clusters to Argo CD.
+Get initial admin password:
 
-# List all kubectl contexts
+kubectl -n argocd get secret argocd-initial-admin-secret \
+  -o jsonpath="{.data.password}" | base64 -d
+
+3. Register Member Clusters
 kubectl config get-contexts
-
-# Add clusters
 argocd cluster add <gke-context>
 argocd cluster add <aks-context>
 
 4. Apply the ApplicationSet
-This instructs Argo CD to deploy the Flask app to all registered clusters.
-
 kubectl --context=<eks-context> apply -f argocd/flask-app-appset.yaml
 
-Argo CD will now create Application resources for each cluster and keep them synchronized with your Git repository.
+
+Argo CD will create Application resources for each registered cluster and keep them synced with the Git repository.
 
 🔁 CI/CD Automation
-The CI pipeline (.github/workflows/ci-pipeline.yml) automates the following on a push to the main branch:
 
-Builds a new Docker image from the Flask app source.
+The CI pipeline (.github/workflows/ci-pipeline.yml) automates:
 
-Pushes the tagged image to Docker Hub.
+Build a Docker image from Flask app source
 
-Updates the image tag in kubernetes/deployment.yaml and commits the change back to the repository.
+Push image to Docker Hub with a new tag
 
-Argo CD detects the manifest change in Git and automatically rolls out the new application version to all clusters, completing the GitOps loop.
+Update kubernetes/deployment.yaml with the new tag
+
+Commit changes back to GitHub
+
+➡️ Argo CD detects the updated manifest and automatically rolls out the new version across all clusters (GitOps loop complete).
 
 🧪 Testing
-Verify that the application is running correctly on each cluster.
 
-# Check pods on GCP
+Check deployments in each cloud provider:
+
+# GCP
 kubectl --context=<gke-context> get pods -n flask-app
 
-# Check services on Azure
+# Azure
 kubectl --context=<aks-context> get services -n flask-app
 
-# Check pods on AWS
+# AWS
 kubectl --context=<eks-context> get pods -n flask-app
 
-Test access using the external IP or LoadBalancer endpoint provided by the service on each cloud.
+
+Access the app using the LoadBalancer/Ingress external IP from each cluster.
 
 🙌 Credits
-Developed by: Aman K
+
+Developed by: Aman Kumar
 
 Guidance: Prof. Neetesh (IIT Roorkee)
