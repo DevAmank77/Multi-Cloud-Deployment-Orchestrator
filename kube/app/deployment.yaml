@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: amank772004/flask-multicloud-app:e1ce25e16df6e9f66812a89678dabf0d5b7c0eef
+        image: amank772004/flask-multicloud-app:bc329d6aab73241b27485b6743c3b9943a194d9b
         ports:
         - containerPort: 8000
